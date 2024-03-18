@@ -94,10 +94,11 @@ pub struct CreateMarketMsg {
 
 #[cw_serde]
 pub struct UpdateMarketMsg {
+    pub market_id: Uint64,
     pub liquidity: Option<(Uint128, Uint128)>,
     pub pct_supply_remaining: Option<(Uint128, Uint128)>,
     pub volume: Option<(Uint128, Uint128)>,
-    pub vote_count: Option<(u32, u32)>,
+    pub rank: Option<(u32, u32)>,
 }
 
 #[cw_serde]
