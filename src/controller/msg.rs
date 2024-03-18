@@ -2,7 +2,10 @@ use cosmwasm_schema::cw_serde;
 use cosmwasm_std::{Addr, Env, Uint128, Uint64};
 use std::fmt;
 
-use crate::tokens::{Token, TokenAmount};
+use crate::{
+    market::msg::BoostingParams,
+    tokens::{Token, TokenAmount},
+};
 
 const ONE_MIL: u128 = 1_000_000;
 
@@ -28,7 +31,7 @@ impl MarketPreset {
     pub fn parse(
         &self,
         env: &Env,
-    ) -> (Uint128, TokenAmount, bool) {
+    ) -> (Uint128, TokenAmount, BoostingParams, bool) {
         match self {
             MarketPreset::Juno => {
                 let is_mainnet = env.block.chain_id == "juno-1";
@@ -37,6 +40,11 @@ impl MarketPreset {
                     TokenAmount {
                         amount: Uint128::from(1_000u128 * ONE_MIL),
                         token: Token::Denom(format!("ujuno{}", if is_mainnet { "" } else { "x" })),
+                    },
+                    BoostingParams {
+                        burn_pct: Uint128::from(500_000u128),
+                        interval_sec: Uint64::from(30u64 * 60u64),
+                        min_boost_amount: Uint128::from(1_000_000u128),
                     },
                     is_mainnet,
                 )
@@ -48,6 +56,11 @@ impl MarketPreset {
                     TokenAmount {
                         amount: Uint128::from(500u128 * ONE_MIL),
                         token: Token::Denom(format!("uosmo{}", if is_mainnet { "" } else { "x" })),
+                    },
+                    BoostingParams {
+                        burn_pct: Uint128::from(500_000u128),
+                        interval_sec: Uint64::from(30u64 * 60u64),
+                        min_boost_amount: Uint128::from(1_000_000u128),
                     },
                     is_mainnet,
                 )
@@ -94,11 +107,23 @@ pub struct CreateMarketMsg {
 
 #[cw_serde]
 pub struct UpdateMarketMsg {
-    pub market_id: Uint64,
-    pub liquidity: Option<(Uint128, Uint128)>,
-    pub pct_supply_remaining: Option<(Uint128, Uint128)>,
+    pub price: Option<(Uint128, Uint128)>,
     pub volume: Option<(Uint128, Uint128)>,
-    pub rank: Option<(u32, u32)>,
+    pub liquidity: Option<(Uint128, Uint128)>,
+    pub remaining_pct: Option<(Uint128, Uint128)>,
+    pub boosts: Option<(u32, u32)>,
+}
+
+impl UpdateMarketMsg {
+    pub fn default() -> Self {
+        Self {
+            price: None,
+            volume: None,
+            remaining_pct: None,
+            boosts: None,
+            liquidity: None,
+        }
+    }
 }
 
 #[cw_serde]

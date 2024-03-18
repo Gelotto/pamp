@@ -3,6 +3,7 @@ use cosmwasm_std::{Addr, Empty, Uint128, Uint64};
 
 use crate::{
     bars::Bar,
+    boost::Boost,
     tokens::{QuoteTokenAmount, TokenAmount},
 };
 
@@ -24,8 +25,9 @@ pub struct MarketAddressesResponse {
 }
 
 #[cw_serde]
-pub struct ReservesResponse {
+pub struct PoolResponse {
     pub base: TokenAmount,
     pub quote: QuoteTokenAmount,
+    pub boost: Boost,
     pub k: Uint128,
 }

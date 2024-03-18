@@ -24,3 +24,12 @@ pub enum Timeframe {
     M5,
     H1,
 }
+
+impl Timeframe {
+    pub fn to_seconds(&self) -> u64 {
+        match self {
+            Self::M5 => 5u64 * 60u64,
+            Self::H1 => 60u64 * 60u64,
+        }
+    }
+}

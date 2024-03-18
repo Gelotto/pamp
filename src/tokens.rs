@@ -104,8 +104,10 @@ pub struct TokenAmount {
 #[cw_serde]
 pub struct QuoteTokenAmount {
     pub token: Token,
+    pub price: Uint128,
     pub amount: Uint128,
-    pub amount_virtual: Uint128,
+    pub boost: Uint128,
+    pub y0: Uint128,
 }
 
 #[cw_serde]
